@@ -1,0 +1,23 @@
+// Public per-icon entries avoid loading Phosphor's entire catalog in dev/tests.
+export { CaretDown } from "@phosphor-icons/react/CaretDown";
+export { CaretUp } from "@phosphor-icons/react/CaretUp";
+export { Check } from "@phosphor-icons/react/Check";
+export { CheckCircle } from "@phosphor-icons/react/CheckCircle";
+export { CheckSquare } from "@phosphor-icons/react/CheckSquare";
+export { Download } from "@phosphor-icons/react/Download";
+export { Eye } from "@phosphor-icons/react/Eye";
+export { EyeSlash } from "@phosphor-icons/react/EyeSlash";
+export { GameController } from "@phosphor-icons/react/GameController";
+export { Info } from "@phosphor-icons/react/Info";
+export { Minus } from "@phosphor-icons/react/Minus";
+export { Plus } from "@phosphor-icons/react/Plus";
+export { PushPin } from "@phosphor-icons/react/PushPin";
+export { PushPinSlash } from "@phosphor-icons/react/PushPinSlash";
+export { Square } from "@phosphor-icons/react/Square";
+export { ThumbsUp } from "@phosphor-icons/react/ThumbsUp";
+export { Upload } from "@phosphor-icons/react/Upload";
+export { UploadSimple } from "@phosphor-icons/react/UploadSimple";
+export { Usb } from "@phosphor-icons/react/Usb";
+export { WarningCircle } from "@phosphor-icons/react/WarningCircle";
+export { WaveSine } from "@phosphor-icons/react/WaveSine";
+export { X } from "@phosphor-icons/react/X";

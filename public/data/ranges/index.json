@@ -1,0 +1,51 @@
+[
+  {
+    "id": "default",
+    "name": "Default",
+    "display": "highlight",
+    "ranges": [
+      { "id": "sub-bass", "name": "Sub bass", "from": 20, "to": 80, "width": "20.1%", "description": "Rumble and physical impact of drum hits and bass section in an orchestra." },
+      { "id": "mid-bass", "name": "Mid bass", "from": 80, "to": 300, "width": "19.2%", "description": "Body of the drum hits. Too much can make the sound muddy." },
+      { "id": "lower-midrange", "name": "Lower midrange", "from": 300, "to": 1000, "width": "17.4%", "description": "Body of the vocal and instruments. A downward slope from bass to lower midrange can help create a sense of 3D depth. Too much 1kHz leads to nasally tone and closed-in vocal." },
+      { "id": "upper-midrange", "name": "Upper midrange", "from": 1000, "to": 4000, "width": "20%", "description": "Upper harmonic of vocal and instruments. For IEMs, there should be a boost in this region to compensate for the fact that they do not interact with outer ears. This boost increases the clarity, but too much can lead to harshness and shoutiness. A moderate ear-gain around 5db, centering at 2kHz can help create illusion that the vocal is in-front of rather than in your head." },
+      { "id": "presence", "name": "Presence region", "from": 4000, "to": 6000, "width": "6%", "description": "Initial impact of percussion instruments exist here. Too little energy in this region can make the sound soft and fuzzy. Too much energy here could lead to harshness." },
+      { "id": "mid-treble", "name": "Mid treble", "from": 6000, "to": 10000, "width": "7.3%", "description": "Body of cymbals, hi-hats, chimes, and other high-pitched instruments. Right amount of energy here creates sparkles, meaning cymbals and hi-hats pop up from a dark background. Too much energy here leads to harshness." },
+      { "id": "air", "name": "Air", "from": 10000, "to": 20000, "width": "10%", "description": "Control the decay, reverb of the sound, background vocal, and other far away background elements in a mix. Careful boost in this region can improve the perceived size of soundstage and micro details." }
+    ]
+  },
+  {
+    "id": "delta-force",
+    "name": "Delta Force",
+    "icon": "/icon/Delta Force.png",
+    "display": "bands",
+    "ranges": [
+      { "id": "immersion", "name": "Immersion", "from": 20, "to": 150, "color": "#8b5cf6", "description": "Low-frequency rumble, environmental ambience and the weight of impacts. Raising it can also increase background rumble." },
+      { "id": "footsteps", "name": "Footsteps", "from": 150, "to": 330, "color": "#d97706", "description": "Body and weight of footsteps. Other sound effects can overlap this band, so inspect it alongside the rest of the response." },
+      { "id": "gun", "name": "Gun", "from": 3500, "to": 6000, "color": "#65a30d", "description": "Ggunfire detail and attack. Large boosts can make shots and other sharp effects sound harsh." },
+      { "id": "heal", "name": "Heal", "from": 7000, "to": 9000, "color": "#f97316", "description": "High-frequency healing and item-use cues. Keep adjustments moderate to avoid overly sharp treble." }
+    ]
+  },
+  {
+    "id": "cs2",
+    "name": "CS2",
+    "icon": "/icon/CS2.png",
+    "display": "bands",
+    "ranges": [
+      { "id": "immersion", "name": "Immersion", "from": 20, "to": 150, "color": "#8b5cf6", "description": "Low-frequency ambience, rumble and the weight of impacts. Increasing it can also make background effects more prominent." },
+      { "id": "footsteps", "name": "Footsteps", "from": 150, "to": 450, "color": "#d97706", "description": "Footstep sounds and other effects may extend beyond this band; use it as a visual reference rather than an isolated positional cue." },
+      { "id": "gun", "name": "Gun", "from": 5000, "to": 8000, "color": "#65a30d", "description": "Gunfire detail and sharp transients. Excessive gain here can make gunshots and nearby effects fatiguing." }
+    ]
+  },
+  {
+    "id": "strinova",
+    "name": "Strinova",
+    "icon": "/icon/Strinova.png",
+    "display": "bands",
+    "ranges": [
+      { "id": "immersion", "name": "Immersion", "from": 20, "to": 150, "color": "#8b5cf6", "description": "Low-frequency ambience, rumble and the weight of impacts. Increasing it can also make background effects more prominent." },
+      { "id": "footsteps", "name": "Footsteps", "from": 150, "to": 375, "color": "#d97706", "description": "Footstep sounds and other effects may extend beyond this band; use it as a visual reference rather than an isolated positional cue." },
+      { "id": "glide", "name": "Glide", "from": 1500, "to": 3000, "color": "#0ea5e9", "description": "This band is often used for glide and sidestep transformations and atmospheric effects." },
+      { "id": "gun", "name": "Gun", "from": 4000, "to": 8000, "color": "#65a30d", "description": "Gunfire detail and sharp transients. Excessive gain here can make gunshots and nearby effects fatiguing." }
+    ]
+  }
+]

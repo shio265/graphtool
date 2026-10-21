@@ -1,0 +1,47 @@
+[
+  {
+    "name": "7HZ",
+    "models": [
+      { "name": "Zero 2"}
+    ]
+  },
+  {
+    "name": "Moondrop",
+    "models": [
+      { "name": "Alice" },
+      { "name": "Aria" },
+      { "name": "Chu" },
+      { "name": "Chu II", "file": ["Chu II", "Chu II DSP"] },
+      { "name": "Harmon" },
+      { "name": "Kato" },
+      { "name": "Kato Blue" },
+      { "name": "KXXS" },
+      { "name": "Lan" },
+      { "name": "Lan 2", "file": ["Lan 2 POP", "Lan 2 REF"] },
+      { "name": "May" },
+      { "name": "Moca" },
+      { "name": "Nekocake", "file": ["Nekocake (ANC)"] },
+      { "name": "Pill" },
+      { "name": "Quarks DSP" },
+      { "name": "Robin", "file": ["Robin (ANC)"] },
+      { "name": "Space Travel", "file": ["Space Travel (Reference)"] },
+      { "name": "Space Travel II", "file": ["Space Travel 2 (ANC)"] },
+      { "name": "Rays" }
+    ]
+  },
+  {
+    "name": "Tanchjim",
+    "models": [
+      { "name": "Bunny DSP" }
+    ]
+  },
+  {
+    "name": "TruthEars",
+    "models": [
+      { "name": "Gate" },
+      { "name": "Hexa" },
+      { "name": "Zero: BLUE", "file": ["Zero"] },
+      { "name": "Zero: RED", "file": ["Zero Red"] }
+    ]
+  }
+]

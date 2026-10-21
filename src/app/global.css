@@ -1,0 +1,62 @@
+@layer theme, base, mui, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+/* Reserve the layer even before MUI injects its styles at runtime. */
+@layer mui {}
+@source "../components";
+
+@custom-variant dark (&:where(.dark-mode, .dark-mode *));
+
+@theme inline {
+  --font-sans: var(--font-primary);
+  --font-mono: var(--font-secondary);
+}
+
+@layer base {
+  html, body { width: 100vw; height: 100vh; max-height: -webkit-fill-available; overflow: hidden; }
+  html { font-family: var(--font-primary); text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: none; user-select: none; overscroll-behavior-y: none; }
+  body { margin: 0; background: var(--background-color); color: var(--font-color-primary); font-family: var(--font-primary); font-size: 14px; font-weight: 400; line-height: 1em; }
+  input { appearance: none; }
+  button, input, select { font-family: inherit; }
+  button:disabled { opacity: .5; cursor: not-allowed !important; }
+  [hidden] { display: none !important; }
+  :focus-visible { outline: 2px solid var(--accent-color) !important; outline-offset: 2px; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; background: rgba(var(--scrollbar-color), .1); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb { background: rgba(var(--scrollbar-accent), .1); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:active { background: rgba(var(--scrollbar-accent), .2); }
+  @media (max-width: 1000px) { ::-webkit-scrollbar { width: 0; } }
+}
+
+:root {
+  --accent-color: hsl(200, 100%, 40%);
+  --accent-color-contrast: hsl(0, 0%, 55%);
+  --accent-color-contrast-more: white;
+  --background-color: hsl(0, 0%, 96%);
+  --background-color-contrast: hsl(0, 0%, 90%);
+  --background-color-contrast-more: hsl(0, 0%, 65%);
+  --background-color-graph: white;
+  --background-color-inputs: white;
+  --font-color-primary: hsl(0, 0%, 10%);
+  --font-color-secondary: white;
+  --font-color-inputs: hsl(0, 0%, 50%);
+  --font-primary: "Open Sans", sans-serif;
+  --font-secondary: monospace;
+  --scrollbar-color: 255,255,255;
+  --scrollbar-accent: 0,0,0;
+}
+
+body.dark-mode, svg.dark-mode {
+  --accent-color: hsl(0, 0%, 82%);
+  --accent-color-contrast: hsl(0, 0%, 50%);
+  --accent-color-contrast-more: black;
+  --background-color: hsl(0, 0%, 6%);
+  --background-color-contrast: hsl(0, 0%, 15%);
+  --background-color-contrast-more: hsl(0, 0%, 30%);
+  --background-color-graph: hsl(0, 0%, 8%);
+  --background-color-inputs: hsl(0, 0%, 15%);
+  --font-color-primary: hsl(0, 0%, 80%);
+  --font-color-secondary: black;
+  --font-color-inputs: hsl(0, 0%, 60%);
+  --scrollbar-color: 0,0,0;
+  --scrollbar-accent: 255,255,255;
+}

@@ -1,0 +1,21 @@
+# License & Copyright
+
+## 1. Original Concept & Attribution
+
+This project is a modern Next.js rewrite ported from [CrinGraph](https://github.com/mlochbaum/CrinGraph), originally created by Marshall Lochbaum under the 0BSD License.
+
+## 2. Project License (PolyForm Noncommercial)
+
+The new codebase, including the Next.js implementation, UI, and additional features, is copyrighted by **shio265** and licensed under the **PolyForm Noncommercial License 1.0.0**.
+
+Under this license, you are free to use, modify, and distribute this software for **noncommercial purposes only** (e.g., personal projects, educational use, hobbyist experimentation).
+
+## 3. Commercial Licensing
+
+Commercial use of this software is **STRICTLY PROHIBITED** without a commercial license. This includes, but is not limited to:
+
+- Selling the software or a modified version of it.
+- Using the software to provide a commercial service (SaaS).
+- Integrating the software into a revenue-generating product.
+
+If you wish to use this software for commercial purposes, please contact me at **<contact@shiorin.dev>**.

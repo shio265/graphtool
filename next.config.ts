@@ -3,8 +3,10 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   experimental: {
-    agentFeedback: true,
+    serverSourceMaps: false,
   },
+  output: 'standalone',
+  productionBrowserSourceMaps: false,
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {
