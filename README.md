@@ -3,12 +3,7 @@
 My graph tool based on [CrinGraph](https://github.com/mlochbaum/CrinGraph).
 
 This version uses Next.js, React, TypeScript and Material UI, with visx for
-graph curves, axes, grids, scales and interactions, and animejs for motion,
-while preserving the original graphing workflow.
-
-UI icons use `@phosphor-icons/react`; Morphicons handles changing shapes with
-animejs-driven motion, without handwritten icon SVG paths.
-DOM fades and slides use animejs WAAPI; graph and icon morphing keep its JS engine.
+graph curves, axes, grids, scales and interactions, and animejs for motion.
 
 ## The In-Ear Graphing Library
 
@@ -60,8 +55,7 @@ Use Bun to install dependencies and start the development server:
 
 The HID SDK is hosted on GitHub Packages. For a fresh install, configure the
 `@shio265` registry and a local token with `read:packages` as described in the
-[device EQ guide](docs/device-eq.md#installing-the-sdk). Never expose this token in
-client-side environment variables.
+[Install SDK guide](https://github.com/shio265/MoondropHID/blob/main/README.md#installation).
 
 ```bash
 bun install
