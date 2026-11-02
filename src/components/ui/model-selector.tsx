@@ -29,7 +29,7 @@ export function ModelSelector({ tool, children, onHighlight, onPanelFocus }: { t
   const filteredModels = useMemo(() => searchModels(tool.models, query, brands), [tool.models, query, brands]);
   const comparingModels = tool.eqModels.length > 1;
   useListMotion(modelList, listSelected);
-  useModelListReveal(modelItems, modelRevealKey);
+  useModelListReveal(modelItems, modelRevealKey, filteredModels);
   useSelectorPanelMotion(panelTrack, selected === "extra");
 
   const selectTab = (tab: SelectorTab) => {

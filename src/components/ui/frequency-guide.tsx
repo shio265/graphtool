@@ -7,6 +7,7 @@ import { frequencyRangePresets, type FrequencyRange, type FrequencyRangePreset }
 import { useHeightMotion } from "@/src/lib/graphtool/animation";
 import { SelectInput } from "./select-input";
 import { GraphIcon } from "./graph-icon";
+import { ScrambleText } from "./scramble-text";
 
 function RangePresetIcon({ src }: { src?: string }) {
   const [failedSource, setFailedSource] = useState<string | null>(null);
@@ -28,6 +29,6 @@ export function FrequencyGuide({ preset, selected, onSelect, onHover, onRangeTyp
       <div className="range-type-selector w-36 shrink-0"><SelectInput variant="range" aria-label="Range type" value={preset.id} onValueChange={onRangeTypeChange}
         options={frequencyRangePresets.map((entry) => ({ value: entry.id, label: entry.name, icon: entry.icon || entry.id !== "default" ? <RangePresetIcon src={entry.icon} /> : undefined }))} /></div>
     </div>
-    <div ref={description} className="tutorial-description block h-0 shrink-0 overflow-hidden border-b border-(--background-color-contrast-more) bg-(--background-color-graph)"><article ref={content} className="description-segment flex w-full items-center justify-center" aria-live="polite"><p className="mx-4 mt-0 mb-4 max-w-200 flex-[auto_1_1] p-4 text-center text-[14px] leading-[1.6] text-(--font-color-primary)">{displayed.description}</p></article></div>
+    <div ref={description} className="tutorial-description block h-0 shrink-0 overflow-hidden border-b border-(--background-color-contrast-more) bg-(--background-color-graph)"><article ref={content} className="description-segment flex w-full items-center justify-center" aria-live="polite"><p className="mx-4 mt-0 mb-4 max-w-200 flex-[auto_1_1] p-4 text-center text-[14px] leading-[1.6] text-(--font-color-primary)"><ScrambleText text={displayed.description} active={!!selectedRange} /></p></article></div>
   </>;
 }

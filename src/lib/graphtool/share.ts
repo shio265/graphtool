@@ -40,6 +40,8 @@ export function sharedModel(catalog: Model[], identifier: string): Model | undef
     for (const candidate of candidates) {
       const identity = modelIdentity(candidate);
       if (identity === identifier) return candidate;
+      // Targets use their encoded filename without the old targets/ prefix.
+      if (candidate.isTarget && encodeURIComponent(candidate.fileName) === identifier) return candidate;
       if (compact && !candidate.isTarget && candidate.brand === compact.brand && candidate.fileName === compact.fileName && !compactMatches.has(identity)) compactMatches.set(identity, candidate);
       if (!qualified && (candidate.fileName === identifier || candidate.fileName === legacyName)) legacyMatches.set(identity, candidate);
     }
@@ -51,7 +53,7 @@ export function sharedModel(catalog: Model[], identifier: string): Model | undef
 }
 
 export function sharedModelIds(models: Model[]): string[] {
-  return [...new Set(models.filter((model) => !model.isDynamic).map((model) => model.isTarget ? modelIdentity(model) : compactModelId(model)))];
+  return [...new Set(models.filter((model) => !model.isDynamic).map((model) => model.isTarget ? encodeURIComponent(model.fileName) : compactModelId(model)))];
 }
 
 export function updateShareURL(models: Model[]): void {
@@ -60,7 +62,7 @@ export function updateShareURL(models: Model[]): void {
   const url = new URL(window.location.href);
   if (ids.length) url.searchParams.set("share", ids.join(","));
   else url.searchParams.delete("share");
-  // Keep target prefixes and item separators readable; encoded name characters
+  // Keep item separators readable; encoded name characters
   // remain protected by the query's outer encoding layer.
   const search = url.search.replace(/%2C/gi, ",").replace(/%2F/gi, "/");
   window.history.replaceState(null, "", `${url.pathname}${search}${url.hash}`);

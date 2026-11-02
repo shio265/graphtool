@@ -16,17 +16,12 @@ export function subscribePhosphorIcons(listener: () => void) {
   return () => { listeners.delete(listener); };
 }
 
-// Read the public component's rendered SVG, never its private render/weights API.
-// Cache once per icon/weight; there are no copied icon paths or generated assets.
 export function cachePhosphorIcon(icon: Icon, weight: IconWeight, markup: string): Promise<void> {
   if (getPhosphorIconData(icon, weight)) return Promise.resolve();
   const requests = pending.get(icon) ?? new Map<IconWeight, Promise<void>>();
   const previous = requests.get(weight);
   if (previous) return previous;
   const data = svgToIcon(markup);
-  // Phosphor draws its strokes as filled contours. Prepare Morphicons' region
-  // adapter before publishing endpoints so their resting geometry is stable.
-  // A failed load keeps the public Phosphor data available for driver fallback.
   const ready = preloadRegion().catch(() => undefined).then(() => {
     const weights = icons.get(icon) ?? new Map<IconWeight, IconInput>();
     weights.set(weight, data);

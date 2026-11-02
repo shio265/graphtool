@@ -1,11 +1,11 @@
 "use client";
 
-import { animate, spring } from "animejs";
+import { animate, onScroll, spring } from "animejs";
 import { SPRING_PRESETS } from "morphicons";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { retainRemovedCurves } from "./curve-presence";
 import { interpolateGraphCurves } from "./graph-transition";
-import type { GraphCurve } from "./types";
+import type { GraphCurve, Model } from "./types";
 import { animateDom, readDomTranslation, type DomMotion } from "./dom-motion";
 
 export function motionDuration(duration: number): number {
@@ -184,29 +184,48 @@ export function useListMotion(ref: RefObject<HTMLDivElement | null>, selected: s
   }, [ref, selected]);
 }
 
-export function useModelListReveal(ref: RefObject<HTMLDivElement | null>, revealKey: number) {
+export function useModelListReveal(ref: RefObject<HTMLDivElement | null>, revealKey: number, models: Model[]) {
   useLayoutEffect(() => {
     const list = ref.current;
     if (!list) return;
     list.scrollTop = 0;
-    if (!motionDuration(400)) return;
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (preference.matches) return;
 
-    // Stagger only the visible rows, so long catalogs never delay offscreen models.
+    // Events owns visibility/scroll listeners; create CSS animations only when
+    // rows enter this scroller, never hundreds of paused native animations.
     const bounds = list.getBoundingClientRect();
-    const items = [...list.querySelectorAll<HTMLElement>(".phone-item")].filter((item) => {
+    const items = [...list.querySelectorAll<HTMLElement>(".phone-item")];
+    const visible = items.filter((item) => {
       const row = item.getBoundingClientRect();
       return row.bottom > bounds.top && row.top < bounds.bottom;
     });
-    if (!items.length) return;
-    const step = Math.min(40, 320 / Math.max(1, items.length - 1));
-    const animations = items.map((item, index) => animateDom(item, {
-      from: { opacity: "0", transform: "translateY(-12px)" },
-      to: { opacity: "1", transform: "translateY(0px)" }, duration: 400, ease: "outCubic", delay: index * step,
-      onComplete: (animation) => { animation.revert(); },
+    const animations = new Set<DomMotion>();
+    const reveal = (item: HTMLElement) => {
+      const animation = animateDom(item, {
+        from: { opacity: "0", transform: "translateY(-12px)" },
+        to: { opacity: "1", transform: "translateY(0px)" }, duration: 400, ease: "outCubic",
+        onComplete: (animation) => { animation.revert(); animations.delete(animation); },
+      });
+      if (animation.engine !== "none") animations.add(animation);
+    };
+    // The first viewport stays static; only rows reached by scrolling reveal.
+    const initiallyVisible = new Set(visible);
+    const observers = items.filter((item) => !initiallyVisible.has(item)).map((item) => onScroll({
+      container: list, target: item, repeat: false, sync: false,
+      onEnter: (observer) => { observer.revert(); reveal(item); },
     }));
-    // Restore reused rows before another brand interrupts the entrance.
-    return () => { animations.forEach((animation) => animation.revert()); };
-  }, [ref, revealKey]);
+    // Stop observing and restore reused rows before filtering or unmounting.
+    const cleanup = () => {
+      observers.forEach((observer) => observer.revert());
+      animations.forEach((animation) => animation.revert());
+      animations.clear();
+      preference.removeEventListener("change", reduce);
+    };
+    const reduce = () => { if (preference.matches) cleanup(); };
+    preference.addEventListener("change", reduce);
+    return cleanup;
+  }, [ref, revealKey, models]);
 }
 
 export function useSelectorPanelMotion(ref: RefObject<HTMLDivElement | null>, showEqualizer: boolean) {
@@ -232,22 +251,28 @@ export function useHeightMotion(ref: RefObject<HTMLDivElement | null>, contentRe
     const content = contentRef.current;
     if (!element || !content) return;
 
-    let animation: ReturnType<typeof animate> | undefined;
+    let animation: DomMotion | undefined;
     let targetHeight = -1;
     const update = () => {
       // Measure the intrinsic content, not the clipped/collapsed outer panel.
       const height = open ? Math.ceil(content.getBoundingClientRect().height) : 0;
       if (height === targetHeight) return;
       targetHeight = height;
-      animation?.pause();
+      animation?.cancel();
+      const start = element.getBoundingClientRect().height;
       // Animate actual layout height so every following section, including
       // Targets, moves continuously even when switching to shorter content.
-      animation = animate(element, { height, duration: motionDuration(300), ease: "inOutCubic" });
+      // Height still requires layout, but WAAPI avoids a JS write each frame.
+      animation = animateDom(element, {
+        from: { height: `${start}px` }, to: { height: `${height}px` },
+        midpoint: { height: `${(start + height) / 2}px` },
+        duration: motionDuration(300), ease: "inOutCubic",
+      });
     };
 
     update();
     const observer = new ResizeObserver(update);
     observer.observe(content);
-    return () => { observer.disconnect(); animation?.pause(); };
+    return () => { observer.disconnect(); animation?.cancel(); };
   }, [ref, contentRef, open, contentKey]);
 }

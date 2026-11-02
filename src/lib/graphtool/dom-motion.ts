@@ -1,6 +1,6 @@
 import { animate, utils, waapi } from "animejs";
 
-type DomProperty = "opacity" | "transform";
+type DomProperty = "opacity" | "transform" | "height";
 type DomStyles = Partial<Record<DomProperty, string>>;
 
 // Native CSS easings avoid the linear() sampling/custom-transform variables
