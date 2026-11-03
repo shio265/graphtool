@@ -17,7 +17,6 @@ import { Button } from "./button";
 import { PanelHeading } from "./panel-heading";
 import { SelectInput } from "./select-input";
 import { EqualizerGuide } from "./equalizer-guide";
-import { FilterCheckboxIcon } from "./filter-checkbox-icon";
 import { GraphIcon } from "./graph-icon";
 import { DeviceEQPanel } from "./device-eq-panel";
 
@@ -56,7 +55,8 @@ export function EqualizerPanel({ tool }: { tool: GraphToolController }) {
       <div className="filters-header grid grid-cols-4 items-center gap-x-1 text-[11px] leading-none"><span className="flex min-w-0 items-center">Type</span><span className="flex min-w-0 items-center">Frequency</span><span className="flex min-w-0 items-center">Gain</span><span className="flex min-w-0 items-center">Q</span></div>
       <div className="filters mb-[0.4em] grid gap-y-1">{tool.filters.map((filter, index) => <div className="filter grid grid-cols-4 items-center gap-x-1" key={index}>
         <span className={filterCell}><Checkbox disableRipple checked={!filter.disabled} disabled={locked} onChange={(event) => changeFilter(index, { disabled: !event.target.checked })}
-          icon={<FilterCheckboxIcon checked={false} />} checkedIcon={<FilterCheckboxIcon checked />}
+          icon={<GraphIcon name="square" morphTo="checkSquare" active={!filter.disabled} className="filter-checkbox-icon" />}
+          checkedIcon={<GraphIcon name="square" morphTo="checkSquare" active={!filter.disabled} className="filter-checkbox-icon" />}
           slotProps={{ input: { name: "enabled", "aria-label": `Enable filter ${index + 1}` } }}
           sx={{ width: "16px", height: "16px", p: 0, mr: "6px", flex: "0 0 16px", color: "var(--background-color-contrast-more)", transition: "none", "&.Mui-checked": { color: "var(--accent-color)" } }} />
           <SelectInput variant="filter" name="type" aria-label={`Filter ${index + 1} type`} value={filter.type} onValueChange={(value) => changeFilter(index, { type: value as FilterType })} disabled={locked}

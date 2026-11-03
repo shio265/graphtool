@@ -4,7 +4,6 @@ import { useId, useState, type ButtonHTMLAttributes, type ReactNode } from "reac
 import ButtonBase from "@mui/material/ButtonBase";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { SelectChevronContext, SelectChevronIcon } from "./select-chevron-icon";
 import { GraphIcon } from "./graph-icon";
 
 interface SelectInputProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children" | "type" | "value" | "onChange" | "onClick"> {
@@ -38,7 +37,7 @@ export function SelectInput({ variant = "model", options, className = "", value,
   const closeMenu = () => setAnchor(null);
   const iconColor = filter ? "text-(--background-color-contrast-more) dark:text-(--font-color-inputs)" : variant === "model" || range ? "text-(--font-color-primary)" : "text-(--font-color-inputs)";
 
-  return <SelectChevronContext value={{ open, filled: filter }}>
+  return <>
     <ButtonBase {...props} id={triggerId} type="button" disabled={disabled} disableRipple
       data-select-trigger="" data-value={selectedValue}
       aria-haspopup="menu" aria-expanded={open} aria-controls={open ? `${menuId}-list` : undefined} aria-describedby={description}
@@ -51,7 +50,9 @@ export function SelectInput({ variant = "model", options, className = "", value,
       className={`select-input-trigger relative m-0 box-border flex w-full min-w-0 justify-start border border-solid ${range ? "bg-(--background-color-graph)" : "bg-(--background-color-inputs)"} text-left font-sans text-[12px] leading-[normal] outline-none ${variants[variant]} ${className}`}>
       {selected?.icon && <span className="select-trigger-icon mr-2 flex size-4 shrink-0 items-center justify-center" aria-hidden="true">{selected.icon}</span>}
       <span id={valueId} className="block min-w-0 flex-1 truncate">{selected?.label ?? options[0]?.label ?? ""}</span>
-      <SelectChevronIcon className={`absolute ${filter ? "right-px top-[calc(50%-7px)]" : variant === "model" ? "right-2.25 top-[calc(50%-8px)]" : "right-1.25 top-[calc(50%-8px)]"} ${iconColor}`} />
+      <GraphIcon name="caretDown" morphTo="caretUp" active={open} weight={filter ? "fill" : "regular"} size={filter ? 14 : 16}
+        fill={filter ? "currentColor" : "none"} stroke={filter ? "none" : "currentColor"}
+        className={`select-chevron-icon absolute ${filter ? "right-px top-[calc(50%-7px)]" : variant === "model" ? "right-2.25 top-[calc(50%-8px)]" : "right-1.25 top-[calc(50%-8px)]"} ${iconColor}`} />
     </ButtonBase>
     {name && <input type="hidden" name={name} value={selectedValue} disabled={disabled} />}
     <Menu id={menuId} anchorEl={anchor?.element ?? null} open={open} onClose={closeMenu}
@@ -79,5 +80,5 @@ export function SelectInput({ variant = "model", options, className = "", value,
       </MenuItem>;
       })}
     </Menu>
-  </SelectChevronContext>;
+  </>;
 }

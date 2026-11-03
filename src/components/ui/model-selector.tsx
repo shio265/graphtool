@@ -8,7 +8,7 @@ import { contrastTextColor, curveColor } from "@/src/lib/graphtool/colors";
 import { sameModel } from "@/src/lib/graphtool/model-identity";
 import { useListMotion, useModelListReveal, useSelectorPanelMotion } from "@/src/lib/graphtool/animation";
 import type { GraphToolController } from "@/src/lib/graphtool/use-graph-tool";
-import { ModelToggleIcon } from "./model-toggle-icon";
+import { GraphIcon } from "./graph-icon";
 import { UploadMenu } from "./upload-menu";
 
 type CatalogTab = "brands" | "models";
@@ -87,7 +87,7 @@ export function ModelSelector({ tool, children, onHighlight, onPanelFocus }: { t
               <div role="button" tabIndex={0} className={`phone-item-add relative ml-auto box-border flex h-9 flex-[36px_0_0] items-center justify-center overflow-hidden rounded-md ${active ? "bg-transparent text-inherit" : "bg-(--background-color) text-(--background-color-contrast-more)"}`} aria-label={`${active ? "Remove" : "Add"} ${model.fullName}`}
                 onClick={(event) => { event.stopPropagation(); if (active) tool.remove(active.key); else void tool.choose(model, false); }}
                 onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.stopPropagation(); if (active) tool.remove(active.key); else void tool.choose(model, false); } }}>
-                <ModelToggleIcon active={!!active} />
+                <GraphIcon name="plus" morphTo="remove" active={!!active} small className="model-toggle-icon" />
               </div>
             </div>;
           })}

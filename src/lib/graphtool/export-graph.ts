@@ -20,7 +20,7 @@ export async function exportGraph(graph: SVGSVGElement, format: "png" | "svg", m
   // Exports represent the selected curves, not a partially drawn animation frame.
   clone.querySelectorAll(".graph-curves path[data-curve-reveal]").forEach((path) => {
     if (path.getAttribute("data-curve-exiting") === "true") path.remove();
-    else { path.removeAttribute("clip-path"); path.removeAttribute("data-curve-reveal"); }
+    else { (path as SVGElement).style.removeProperty("clip-path"); path.removeAttribute("clip-path"); path.removeAttribute("data-curve-reveal"); }
   });
   clone.querySelectorAll("defs[data-curve-reveal]").forEach((node) => node.remove());
   const background = getComputedStyle(graph).getPropertyValue("--background-color-graph").trim() || "white";

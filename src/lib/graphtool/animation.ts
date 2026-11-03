@@ -7,6 +7,7 @@ import { retainRemovedCurves } from "./curve-presence";
 import { interpolateGraphCurves } from "./graph-transition";
 import type { GraphCurve, Model } from "./types";
 import { animateDom, readDomTranslation, type DomMotion } from "./dom-motion";
+import { curveRevealClip, readCurveReveal } from "./curve-reveal";
 
 export function motionDuration(duration: number): number {
   return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : duration;
@@ -54,28 +55,59 @@ export function useCurvePresence(curves: GraphCurve[]) {
   return { renderedCurves: [...curves, ...exiting], activeCurveIds, finishExit };
 }
 
-export function useCurveReveal(ref: RefObject<SVGRectElement | null>, present: boolean, width: number, curveId: string, onExit: (id: string) => void) {
+export function useCurveReveal(ref: RefObject<SVGRectElement | null>, pathRef: RefObject<SVGPathElement | null>, present: boolean, width: number, curveId: string, onExit: (id: string) => void) {
   const progress = useRef({ value: 0 });
   useLayoutEffect(() => {
     const rectangle = ref.current;
-    if (!rectangle) return;
+    const path = pathRef.current;
+    if (!rectangle || !path) return;
     const current = progress.current;
     const target = present ? 1 : 0;
     const update = () => rectangle.setAttribute("width", String(width * current.value));
     const complete = () => {
       current.value = target;
       update();
+      // Return to the SVG clip at rest, including reduced-motion completion.
+      path.style.removeProperty("clip-path");
       if (!present) onExit(curveId);
     };
     const duration = motionDuration(present ? 500 : 300) * Math.abs(target - current.value);
     if (!duration) { complete(); return; }
+    if (typeof path.animate === "function" && typeof CSS !== "undefined" && typeof CSS.supports === "function" && CSS.supports("clip-path", curveRevealClip(0, width))) {
+      // CSS basic shapes can use WAAPI; SVG clipPath geometry still needs JS.
+      // The view-box reference keeps reveal speed independent of curve bounds,
+      // smoothing and zoom, and preserves dashed target strokes.
+      rectangle.setAttribute("width", String(width));
+      try {
+        const animation = animateDom(path, {
+          from: { "clip-path": curveRevealClip(current.value, width) },
+          to: { "clip-path": curveRevealClip(target, width) },
+          midpoint: { "clip-path": curveRevealClip((current.value + target) / 2, width) },
+          duration, ease: "inOutCubic", onComplete: complete,
+        });
+        return () => {
+          animation.cancel();
+          current.value = readCurveReveal(getComputedStyle(path).clipPath, width, current.value);
+        };
+      } catch {
+        // Some implementations expose WAAPI/CSS shapes but reject SVG effects.
+        // Continue with the original SVG geometry animation below.
+      }
+    }
+    path.style.removeProperty("clip-path");
+    update();
     // Resume from the current reveal when a fast re-selection interrupts exit.
     const animation = animate(current, { value: target, duration, ease: "inOutCubic", onUpdate: update, onComplete: complete });
-    return () => { animation.pause(); };
-  }, [ref, present, width, curveId, onExit]);
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const reduce = () => { if (preference.matches) animation.complete(); };
+    preference.addEventListener("change", reduce);
+    return () => { animation.pause(); preference.removeEventListener("change", reduce); };
+  }, [ref, pathRef, present, width, curveId, onExit]);
 }
 
 export function useAnimatedRange(from: number, to: number, duration = 700): [number, number] {
+  // Domain interpolation updates paths, ticks and hit testing together. These
+  // JS object values cannot be offloaded to WAAPI like the curve reveal can.
   const [range, setRange] = useState<[number, number]>([from, to]);
   const current = useRef({ low: from, high: to });
   useEffect(() => {

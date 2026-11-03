@@ -1,6 +1,6 @@
 import { animate, utils, waapi } from "animejs";
 
-type DomProperty = "opacity" | "transform" | "height";
+type DomProperty = "opacity" | "transform" | "height" | "clip-path";
 type DomStyles = Partial<Record<DomProperty, string>>;
 
 // Native CSS easings avoid the linear() sampling/custom-transform variables
@@ -39,7 +39,7 @@ export function readDomTranslation(element: HTMLElement, axis: "x" | "y"): numbe
   return axis === "x" ? matrix.m41 : matrix.m42;
 }
 
-export function animateDom(element: HTMLElement, { from = {}, to, duration, delay = 0, ease = "linear", midpoint, onComplete }: DomMotionOptions): DomMotion {
+export function animateDom(element: HTMLElement | SVGElement, { from = {}, to, duration, delay = 0, ease = "linear", midpoint, onComplete }: DomMotionOptions): DomMotion {
   if (ease === "inOutCubic" && Object.keys(to).some((property) => midpoint?.[property as DomProperty] === undefined)) throw new Error("inOutCubic DOM motion requires halfway geometry for every property.");
   const properties = Object.keys(to) as DomProperty[];
   const original = properties.map((property) => ({ property, value: element.style.getPropertyValue(property), priority: element.style.getPropertyPriority(property) }));
@@ -102,15 +102,23 @@ export function animateDom(element: HTMLElement, { from = {}, to, duration, dela
   write(start);
   preference.addEventListener("change", reduce);
   const segmented = engine === "waapi" && ease === "inOutCubic";
-  const keyframes = Object.fromEntries(properties.map((property) => [property, segmented ? [start[property]!, midpoint![property]!, to[property]!] : [start[property]!, to[property]!]]));
+  // Property-indexed WAAPI keyframes require camelCase CSS names.
+  const keyframes = Object.fromEntries(properties.map((property) => [property === "clip-path" ? "clipPath" : property, segmented ? [start[property]!, midpoint![property]!, to[property]!] : [start[property]!, to[property]!]]));
   if (engine === "waapi") {
-    controller = waapi.animate(element, { ...keyframes, duration, delay, ease: ease === "inOutCubic" ? domEasings.linear : domEasings[ease], onComplete: finish });
-    // Configure once; animejs still owns playback and cleanup. A single CSS
-    // ease-in-out approximation would move a 350px panel by up to 3.4px.
-    if (segmented) controller.forEach((animation) => {
-      const effect = animation.effect as KeyframeEffect;
-      effect.setKeyframes(effect.getKeyframes().map((frame, index) => ({ ...frame, easing: index === 0 ? domEasings.inCubic : domEasings.outCubic })));
-    });
+    try {
+      controller = waapi.animate(element, { ...keyframes, duration, delay, ease: ease === "inOutCubic" ? domEasings.linear : domEasings[ease], onComplete: finish });
+      // Configure once; animejs still owns playback and cleanup. A single CSS
+      // ease-in-out approximation would move a 350px panel by up to 3.4px.
+      if (segmented) controller.forEach((animation) => {
+        const effect = animation.effect as KeyframeEffect;
+        effect.setKeyframes(effect.getKeyframes().map((frame, index) => ({ ...frame, easing: index === 0 ? domEasings.inCubic : domEasings.outCubic })));
+      });
+    } catch (error) {
+      // A caller can fall back if native animation rejects this effect. Do not
+      // leave a reduced-motion listener behind after a failed construction.
+      animation.cancel();
+      throw error;
+    }
   } else controller = animate(element, { ...keyframes, duration, delay, ease, onComplete: finish });
   return animation;
 }
