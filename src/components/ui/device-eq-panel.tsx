@@ -52,7 +52,7 @@ export function DeviceEQPanel({ tool }: { tool: GraphToolController }) {
     {notice && <Alert severity={notice.severity} variant="filled" className="device-eq-alert" onClose={deviceEQ.clearNotice} closeText="Dismiss EQ notification"
       icon={<GraphIcon name={notice.severity === "success" ? "success" : "warning"} size={18} />} slots={{ closeIcon: CloseDeviceEQNoticeIcon }}
       slotProps={{ closeButton: { disableRipple: true, sx: { transition: "none" } } }}
-      sx={{ my: 1, px: "8px", py: "4px", fontSize: "12px", lineHeight: 1.5, "& .MuiAlert-icon": { py: "4px", mr: "8px" }, "& .MuiAlert-message": { py: "4px", overflowWrap: "anywhere" }, "& .MuiAlert-action": { pt: 0, alignItems: "center" } }}>
+      sx={{ my: 1, px: "8px", py: "4px", alignItems: "center", fontSize: "12px", lineHeight: 1.5, "& .MuiAlert-icon": { py: "4px", mr: "8px", alignItems: "center" }, "& .MuiAlert-message": { py: "4px", overflowWrap: "anywhere" }, "& .MuiAlert-action": { pt: 0, alignItems: "center" } }}>
       {notice.operation} EQ {notice.severity === "success" ? "successful." : "failed."}
     </Alert>}
     <DeviceSupportDialog id={listId} open={supportListOpen} onClose={() => deviceEQ.setSupportListOpen(false)} />

@@ -17,7 +17,10 @@ export function NoticeAlert({ message, onClose }: { message: string; onClose: ()
     <Alert severity="error" variant="filled" onClose={onClose} closeText="Dismiss notification" className="notice-alert" aria-labelledby={titleId} icon={<GraphIcon name="warning" size={22} />}
       slots={{ closeIcon: CloseNoticeIcon }}
       slotProps={{ closeButton: { disableRipple: true, sx: { transition: "none", "&.Mui-focusVisible": { outline: "2px solid currentColor", outlineOffset: "2px" } } } }}
-      sx={{ boxSizing: "border-box", width: "100%", fontSize: "14px", lineHeight: 1.6, "& .MuiAlert-message": { minWidth: 0, whiteSpace: "pre-line", overflowWrap: "anywhere", maxHeight: "calc(100dvh - 80px)", overflowY: "auto" } }}>
+      sx={{ boxSizing: "border-box", width: "100%", alignItems: "center", fontSize: "14px", lineHeight: 1.6,
+        "& .MuiAlert-icon": { alignItems: "center", py: 0 },
+        "& .MuiAlert-action": { alignItems: "center", pt: 0 },
+        "& .MuiAlert-message": { minWidth: 0, whiteSpace: "pre-line", overflowWrap: "anywhere", maxHeight: "calc(100dvh - 80px)", overflowY: "auto" } }}>
       {message}
     </Alert>
   </Snackbar>;
